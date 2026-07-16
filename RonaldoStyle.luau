@@ -743,6 +743,7 @@ local function load(char)
     initialized = true
     repeat task.wait() until plr.Team ~= game.Teams.lobby
     task.wait(0.1)
+    plr:SetAttribute("style", "ronaldo")
     BlockOriginalSkills()
 
     local hotbar = plr.PlayerGui:FindFirstChild("Hotbar")
