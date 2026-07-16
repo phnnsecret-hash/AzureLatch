@@ -67,6 +67,8 @@ workspace.ChildAdded:Connect(function(child)
     if child.Name == "map" then watchMap() end
 end)
 
+local mobileUICreated = false
+
 local lastAccelerate = 0
 local accelerateCooldown = 7.5
 local ronaldoAwkOnCD = false
@@ -143,6 +145,110 @@ task.spawn(function()
         TweenService:Create(noti.TextLabel, TweenInfo.new(0.28, Enum.EasingStyle.Linear), {TextStrokeTransparency = 1}):Play()
     end)
 end)
+
+local function createMobileUI(skillFuncs)
+    local screenGui = Instance.new("ScreenGui")
+    screenGui.Name = "MobileSkillUI"
+    screenGui.ResetOnSpawn = false
+    screenGui.Parent = plr:WaitForChild("PlayerGui")
+    
+    local function createButton(name, index, func)
+        local btn = Instance.new("TextButton")
+        btn.Name = name
+        btn.Size = UDim2.new(0, 70, 0, 70)
+        btn.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+        btn.BackgroundTransparency = 0.3
+        btn.TextColor3 = Color3.fromRGB(255, 255, 255)
+        btn.TextSize = 12
+        btn.Text = tostring(index)
+        btn.Parent = screenGui
+        
+        local corner = Instance.new("UICorner")
+        corner.CornerRadius = UDim.new(0, 5)
+        corner.Parent = btn
+        
+        local pos = UDim2.new(0, 10 + (index-1)*80, 0, 10)
+        btn.Position = pos
+        
+        local dragging = false
+        local dragStart = nil
+        local posStart = nil
+        
+        btn.InputBegan:Connect(function(input)
+            if input.UserInputType == Enum.UserInputType.Touch then
+                dragging = true
+                dragStart = input.Position
+                posStart = btn.Position
+            end
+        end)
+        
+        btn.InputEnded:Connect(function(input)
+            if input.UserInputType == Enum.UserInputType.Touch then
+                dragging = false
+            end
+        end)
+        
+        btn.InputChanged:Connect(function(input)
+            if dragging and input.UserInputType == Enum.UserInputType.Touch then
+                local delta = input.Position - dragStart
+                btn.Position = posStart + UDim2.new(0, delta.X, 0, delta.Y)
+            end
+        end)
+        
+        btn.TouchTap:Connect(func)
+        btn.MouseButton1Click:Connect(func)
+        
+        return btn
+    end
+    
+    createButton("Skill1", 1, skillFuncs[1])
+    createButton("Skill2", 2, skillFuncs[2])
+    createButton("Skill3", 3, skillFuncs[3])
+    createButton("Skill4", 4, skillFuncs[4])
+    
+    local ultimateBtn = Instance.new("TextButton")
+    ultimateBtn.Name = "Ultimate"
+    ultimateBtn.Size = UDim2.new(0, 70, 0, 70)
+    ultimateBtn.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+    ultimateBtn.BackgroundTransparency = 0.3
+    ultimateBtn.TextColor3 = Color3.fromRGB(255, 215, 0)
+    ultimateBtn.TextSize = 12
+    ultimateBtn.Text = "G"
+    ultimateBtn.Position = UDim2.new(0, 10, 0, 90)
+    ultimateBtn.Parent = screenGui
+    
+    local corner = Instance.new("UICorner")
+    corner.CornerRadius = UDim.new(0, 5)
+    corner.Parent = ultimateBtn
+    
+    local dragging = false
+    local dragStart = nil
+    local posStart = nil
+    
+    ultimateBtn.InputBegan:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.Touch then
+            dragging = true
+            dragStart = input.Position
+            posStart = ultimateBtn.Position
+        end
+    end)
+    
+    ultimateBtn.InputEnded:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.Touch then
+            dragging = false
+        end
+    end)
+    
+    ultimateBtn.InputChanged:Connect(function(input)
+        if dragging and input.UserInputType == Enum.UserInputType.Touch then
+            local delta = input.Position - dragStart
+            ultimateBtn.Position = posStart + UDim2.new(0, delta.X, 0, delta.Y)
+        end
+    end)
+    
+    ultimateBtn.TouchTap:Connect(skillFuncs[5])
+    ultimateBtn.MouseButton1Click:Connect(skillFuncs[5])
+end
 
 local watermarkObj = nil
 if not getgenv().DisableWatermark then
@@ -483,6 +589,22 @@ task.spawn(function()
         task.wait(0.1)
     end
 end)
+
+if not mobileUICreated then
+    mobileUICreated = true
+    task.spawn(function()
+        task.wait(2)
+        if not disabled then
+            createMobileUI({
+                function() UserInputService:GetState(Enum.KeyCode.One) end,
+                function() UserInputService:GetState(Enum.KeyCode.Two) end,
+                function() UserInputService:GetState(Enum.KeyCode.Three) end,
+                function() UserInputService:GetState(Enum.KeyCode.Four) end,
+                RonaldoAwk
+            })
+        end
+    end)
+end
 
 local function BlockOriginalSkills()
     task.wait(0.1)
