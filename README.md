@@ -1,7 +1,7 @@
 
 <h1 align="center">RRJ</h1>
 
-![Language](https://img.shields.io/github/languages/top/phnnsecret-hash/AzureLatch?style=for-the-badge)
+![Language](https://img.shields.io/badge/Language-Luau-blue?style=for-the-badge)
 ![Status](https://img.shields.io/badge/Status-Maintained-success?style=for-the-badge)
 ![Platform](https://img.shields.io/badge/Platform-Mobile%20Compatible-blue?style=for-the-badge)
 ![Maintained](https://img.shields.io/badge/Maintained-Yes-brightgreen?style=for-the-badge)
