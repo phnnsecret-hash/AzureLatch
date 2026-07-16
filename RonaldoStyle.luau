@@ -872,7 +872,7 @@ load(plr.Character)
 
 plr.CharacterAdded:Connect(function(char)
     ronaldoAwkOnCD = false
-    initialized = false  -- respawn olunca yeniden init etmesi için sıfırla
+    initialized = false
     task.wait(1)
     load(char)
 end)
