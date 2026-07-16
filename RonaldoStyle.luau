@@ -504,6 +504,208 @@ local function TeleportShot(char, shootDelay)
     end)
 end
 
+local function RonaldoDribble()
+    local char = plr.Character
+    if not char or Stunned() or not hasball() or IsOnCD("skill1") then return end
+    
+    DoCD("skill1", 5)
+    StartCooldownUI(1, 5)
+    Stun(4.6, false)
+    
+    local anim = char.Humanoid:LoadAnimation(rep.Resources.ronaldo.running)
+    anim:Play()
+
+    local dribbleClone = rep.Resources.RonaldoDribble:Clone()
+    GroupWeld(char, dribbleClone)
+    dribbleClone.Parent = workspace.Effects
+    sfx(rep.Resources.ronaldo.RonaldoDribble, char.HumanoidRootPart)
+    game.Debris:AddItem(dribbleClone, 5)
+
+    local root = char.HumanoidRootPart
+    task.spawn(function()
+        task.delay(1.5, function() if not disabled then BodyVelocity(root, 40, 1) end end)
+        task.delay(1.8, function() if not disabled then BodyVelocity(root, 120, 1.1) end end)
+        task.delay(2.5, function() if not disabled then BodyVelocity(root, 90, 0.75) end end)
+        task.delay(2.9, function() if not disabled then BodyVelocity(root, 100, 0.85) end end)
+        task.delay(3.2, function() if not disabled then BodyVelocity(root, 175, 1.7) end end)
+        task.delay(3.9, function() if not disabled then BodyVelocity(root, 40, 0.65) end end)
+    end)
+
+    task.spawn(function()
+        local attach = dribbleClone.Rig.Head["1"]
+        EmitAttachment(attach)
+        ToggleAttachment(attach, true, 1)
+    end)
+
+    task.delay(2.5, function() if not disabled then EmitAttachment(dribbleClone.Rig.HumanoidRootPart["3"]) end end)
+    task.delay(2.933, function() if not disabled then EmitAttachment(dribbleClone.Rig.HumanoidRootPart["4"]) end end)
+    task.delay(3.2, function() if not disabled then EmitAttachment(dribbleClone.Rig.HumanoidRootPart["3.2"]) end end)
+    task.delay(3.417, function() if not disabled then EmitAttachment(dribbleClone.Rig.HumanoidRootPart["3.5"]) end end)
+    task.delay(3.933, function() if not disabled then EmitAttachment(dribbleClone.Rig.HumanoidRootPart["5"]) end end)
+end
+
+local function RonaldoBicycle()
+    local char = plr.Character
+    if not char or Stunned() or not hasball() or IsOnCD("skill2") then return end
+    
+    DoCD("skill2", 8)
+    StartCooldownUI(2, 8)
+    Stun(1.5, false)
+
+    local bicycle1 = Instance.new("Animation")
+    bicycle1.AnimationId = "rbxassetid://126734456236034"
+    local bicycle = char.Humanoid:LoadAnimation(bicycle1)
+    bicycle.Priority = Enum.AnimationPriority.Action2
+    bicycle:Play()
+
+    sfx(rep.Resources.ronaldo.KICK, char.HumanoidRootPart)
+
+    task.delay(0.8, function()
+        if disabled then return end
+        local boom = rep.Resources.ronaldo.bicyclekick:Clone()
+        boom.Parent = char.HumanoidRootPart
+        boom.CFrame = char.HumanoidRootPart.CFrame * CFrame.new(0, 0, -2)
+        for _, v in pairs(boom:GetDescendants()) do
+            if v:IsA("ParticleEmitter") then
+                v:Emit(v:GetAttribute("EmitCount"))
+            end
+        end
+        game.Debris:AddItem(boom, 5)
+    end)
+
+    TeleportShot(char, 0.9)
+end
+
+local function RonaldoPass()
+    local char = plr.Character
+    if not char or Stunned() or not hasball() or IsOnCD("skill3") then return end
+    local root = char:FindFirstChild("HumanoidRootPart")
+    if not root then return end
+
+    local closestTeammate = nil
+    local shortestDistance = 180
+
+    for _, p in ipairs(game.Players:GetPlayers()) do
+        if p == plr then continue end
+        if not p.Character then continue end
+        if p.Team ~= plr.Team then continue end
+        if p.Team == game.Teams.lobby then continue end
+        local targetRoot = p.Character:FindFirstChild("HumanoidRootPart")
+        if not targetRoot then continue end
+        local dist = (root.Position - targetRoot.Position).Magnitude
+        if dist < shortestDistance then
+            shortestDistance = dist
+            closestTeammate = p
+        end
+    end
+
+    if not closestTeammate then return end
+
+    local targetRoot = closestTeammate.Character.HumanoidRootPart
+    local distance = shortestDistance
+
+    DoCD("skill3", 6)
+    StartCooldownUI(3, 6)
+    Stun(0.7, false)
+    char.Humanoid.WalkSpeed = 0
+
+    local passAnim = Instance.new("Animation")
+    passAnim.AnimationId = "rbxassetid://129737241094076"
+    local track = char.Humanoid:LoadAnimation(passAnim)
+    track.Priority = Enum.AnimationPriority.Action
+    track:Play()
+
+    sfx(rep.Resources.ronaldo.KICK, root)
+
+    task.wait(0.35)
+
+    if not char or not root.Parent then return end
+
+    local direction = (targetRoot.Position - root.Position).Unit
+    local kickDir = Vector3.new(direction.X, 0.18, direction.Z).Unit
+    local power = math.clamp(distance / 1.4, 18, 95)
+
+    remote:FireServer(
+        buffer.fromstring(buffers["base"]),
+        { {"kick", power, true, vector.create(kickDir.X, kickDir.Y, kickDir.Z)} }
+    )
+
+    task.delay(0.7, function()
+        if char and char:FindFirstChild("Humanoid") then
+            char.Humanoid.WalkSpeed = 40
+        end
+    end)
+end
+
+local function RonaldoDash()
+    local char = plr.Character
+    if not char or Stunned() or hasball() or IsOnCD("skill4") then return end
+    local root = char:FindFirstChild("HumanoidRootPart")
+    if not root then return end
+    
+    DoCD("skill4", accelerateCooldown)
+    StartCooldownUI(4, accelerateCooldown)
+    Stun(1, false)
+
+    local accelAnim = Instance.new("Animation")
+    accelAnim.AnimationId = "rbxassetid://73266865968554"
+    local track = char.Humanoid:LoadAnimation(accelAnim)
+    track.Priority = Enum.AnimationPriority.Action
+    track.TimePosition = 0
+    track:Play()
+
+    local accelSound = Instance.new("Sound")
+    accelSound.SoundId = "rbxassetid://80157960628620"
+    accelSound.Volume = 4
+    accelSound.Parent = root
+    accelSound:Play()
+    game.Debris:AddItem(accelSound, 10)
+
+    local effect1 = rep.Resources.nagi.newgroundcontroleffect["1"]:Clone()
+    local effect2 = rep.Resources.nagi.newgroundcontroleffect["2"]:Clone()
+    effect1.Parent = root
+    effect2.Parent = root
+    effect1.CFrame = root.CFrame
+    effect2.CFrame = root.CFrame
+
+    local allParticles = {}
+    local colorToggle = true
+    for _, obj in ipairs(effect1:GetDescendants()) do
+        if obj:IsA("ParticleEmitter") then
+            local cloned = obj:Clone()
+            cloned.Color = ColorSequence.new(colorToggle and Color3.fromRGB(255,0,0) or Color3.fromRGB(0,255,0))
+            cloned.Size = NumberSequence.new(obj.Size.Keypoints[1].Value * 1.5)
+            cloned.Parent = root
+            cloned.Enabled = true
+            table.insert(allParticles, cloned)
+            colorToggle = not colorToggle
+        end
+    end
+    for _, obj in ipairs(effect2:GetDescendants()) do
+        if obj:IsA("ParticleEmitter") then
+            local cloned = obj:Clone()
+            cloned.Color = ColorSequence.new(colorToggle and Color3.fromRGB(255,0,0) or Color3.fromRGB(0,255,0))
+            cloned.Size = NumberSequence.new(obj.Size.Keypoints[1].Value * 1.1)
+            cloned.Parent = root
+            cloned.Enabled = true
+            table.insert(allParticles, cloned)
+            colorToggle = not colorToggle
+        end
+    end
+
+    task.spawn(function()
+        BodyVelocity(root, 120, 1, false, TweenInfo.new(1, Enum.EasingStyle.Quad, Enum.EasingDirection.Out))
+        task.delay(1, function()
+            for _, p in allParticles do if p and p.Parent then p.Enabled = false end end
+        end)
+        task.delay(3, function()
+            for _, p in allParticles do if p then p:Destroy() end end
+            if effect1 then effect1:Destroy() end
+            if effect2 then effect2:Destroy() end
+        end)
+    end)
+end
+
 local function RonaldoAwk()
     local char = plr.Character
     if not char or ronaldoAwkOnCD then return end
@@ -596,10 +798,10 @@ if not mobileUICreated then
         task.wait(2)
         if not disabled then
             createMobileUI({
-                function() UserInputService:GetState(Enum.KeyCode.One) end,
-                function() UserInputService:GetState(Enum.KeyCode.Two) end,
-                function() UserInputService:GetState(Enum.KeyCode.Three) end,
-                function() UserInputService:GetState(Enum.KeyCode.Four) end,
+                RonaldoDribble,
+                RonaldoBicycle,
+                RonaldoPass,
+                RonaldoDash,
                 RonaldoAwk
             })
         end
@@ -670,195 +872,16 @@ UserInputService.InputBegan:Connect(function(input, bg)
         RonaldoAwk()
 
     elseif input.KeyCode == Enum.KeyCode.One then
-        if Stunned() or not hasball() or IsOnCD("skill1") then return end
-        
-        DoCD("skill1", 5)
-        StartCooldownUI(1, 5)
-        Stun(4.6, false)
-        
-        local anim = char.Humanoid:LoadAnimation(rep.Resources.ronaldo.running)
-        anim:Play()
-
-        local dribbleClone = rep.Resources.RonaldoDribble:Clone()
-        GroupWeld(char, dribbleClone)
-        dribbleClone.Parent = workspace.Effects
-        sfx(rep.Resources.ronaldo.RonaldoDribble, root)
-        game.Debris:AddItem(dribbleClone, 5)
-
-        task.spawn(function()
-            task.delay(1.5, function() if not disabled then BodyVelocity(root, 40, 1) end end)
-            task.delay(1.8, function() if not disabled then BodyVelocity(root, 120, 1.1) end end)
-            task.delay(2.5, function() if not disabled then BodyVelocity(root, 90, 0.75) end end)
-            task.delay(2.9, function() if not disabled then BodyVelocity(root, 100, 0.85) end end)
-            task.delay(3.2, function() if not disabled then BodyVelocity(root, 175, 1.7) end end)
-            task.delay(3.9, function() if not disabled then BodyVelocity(root, 40, 0.65) end end)
-        end)
-
-        task.spawn(function()
-            local attach = dribbleClone.Rig.Head["1"]
-            EmitAttachment(attach)
-            ToggleAttachment(attach, true, 1)
-        end)
-
-        task.delay(2.5, function() if not disabled then EmitAttachment(dribbleClone.Rig.HumanoidRootPart["3"]) end end)
-        task.delay(2.933, function() if not disabled then EmitAttachment(dribbleClone.Rig.HumanoidRootPart["4"]) end end)
-        task.delay(3.2, function() if not disabled then EmitAttachment(dribbleClone.Rig.HumanoidRootPart["3.2"]) end end)
-        task.delay(3.417, function() if not disabled then EmitAttachment(dribbleClone.Rig.HumanoidRootPart["3.5"]) end end)
-        task.delay(3.933, function() if not disabled then EmitAttachment(dribbleClone.Rig.HumanoidRootPart["5"]) end end)
+        RonaldoDribble()
 
     elseif input.KeyCode == Enum.KeyCode.Two then
-        if Stunned() or not hasball() or IsOnCD("skill2") then return end
-        
-        DoCD("skill2", 8)
-        StartCooldownUI(2, 8)
-        Stun(1.5, false)
-
-        local bicycle1 = Instance.new("Animation")
-        bicycle1.AnimationId = "rbxassetid://126734456236034"
-        local bicycle = char.Humanoid:LoadAnimation(bicycle1)
-        bicycle.Priority = Enum.AnimationPriority.Action2
-        bicycle:Play()
-
-        sfx(rep.Resources.ronaldo.KICK, char.HumanoidRootPart)
-
-        task.delay(0.8, function()
-            if disabled then return end
-            local boom = rep.Resources.ronaldo.bicyclekick:Clone()
-            boom.Parent = char.HumanoidRootPart
-            boom.CFrame = char.HumanoidRootPart.CFrame * CFrame.new(0, 0, -2)
-            for _, v in pairs(boom:GetDescendants()) do
-                if v:IsA("ParticleEmitter") then
-                    v:Emit(v:GetAttribute("EmitCount"))
-                end
-            end
-            game.Debris:AddItem(boom, 5)
-        end)
-
-        TeleportShot(char, 0.9)
+        RonaldoBicycle()
 
     elseif input.KeyCode == Enum.KeyCode.Three then
-        if Stunned() or not hasball() or IsOnCD("skill3") then return end
-
-        local closestTeammate = nil
-        local shortestDistance = 180
-
-        for _, p in ipairs(game.Players:GetPlayers()) do
-            if p == plr then continue end
-            if not p.Character then continue end
-            if p.Team ~= plr.Team then continue end
-            if p.Team == game.Teams.lobby then continue end
-            local targetRoot = p.Character:FindFirstChild("HumanoidRootPart")
-            if not targetRoot then continue end
-            local dist = (root.Position - targetRoot.Position).Magnitude
-            if dist < shortestDistance then
-                shortestDistance = dist
-                closestTeammate = p
-            end
-        end
-
-        if not closestTeammate then return end
-
-        local targetRoot = closestTeammate.Character.HumanoidRootPart
-        local distance = shortestDistance
-
-        DoCD("skill3", 6)
-        StartCooldownUI(3, 6)
-        Stun(0.7, false)
-        char.Humanoid.WalkSpeed = 0
-
-        local passAnim = Instance.new("Animation")
-        passAnim.AnimationId = "rbxassetid://129737241094076"
-        local track = char.Humanoid:LoadAnimation(passAnim)
-        track.Priority = Enum.AnimationPriority.Action
-        track:Play()
-
-        sfx(rep.Resources.ronaldo.KICK, root)
-
-        task.wait(0.35)
-
-        if not char or not root.Parent then return end
-
-        local direction = (targetRoot.Position - root.Position).Unit
-        local kickDir = Vector3.new(direction.X, 0.18, direction.Z).Unit
-        local power = math.clamp(distance / 1.4, 18, 95)
-
-        remote:FireServer(
-            buffer.fromstring(buffers["base"]),
-            { {"kick", power, true, vector.create(kickDir.X, kickDir.Y, kickDir.Z)} }
-        )
-
-        task.delay(0.7, function()
-            if char and char:FindFirstChild("Humanoid") then
-                char.Humanoid.WalkSpeed = 40
-            end
-        end)
+        RonaldoPass()
 
     elseif input.KeyCode == Enum.KeyCode.Four then
-        if Stunned() or hasball() or IsOnCD("skill4") then return end
-        
-        DoCD("skill4", accelerateCooldown)
-        StartCooldownUI(4, accelerateCooldown)
-        Stun(1, false)
-
-        local accelAnim = Instance.new("Animation")
-        accelAnim.AnimationId = "rbxassetid://73266865968554"
-        local track = char.Humanoid:LoadAnimation(accelAnim)
-        track.Priority = Enum.AnimationPriority.Action
-        track.TimePosition = 0
-        track:Play()
-
-        local accelSound = Instance.new("Sound")
-        accelSound.SoundId = "rbxassetid://80157960628620"
-        accelSound.Volume = 4
-        accelSound.Parent = root
-        accelSound:Play()
-        game.Debris:AddItem(accelSound, 10)
-
-        local effect1 = rep.Resources.nagi.newgroundcontroleffect["1"]:Clone()
-        local effect2 = rep.Resources.nagi.newgroundcontroleffect["2"]:Clone()
-        effect1.Parent = root
-        effect2.Parent = root
-        effect1.CFrame = root.CFrame
-        effect2.CFrame = root.CFrame
-
-        local allParticles = {}
-        local colorToggle = true
-        for _, obj in ipairs(effect1:GetDescendants()) do
-            if obj:IsA("ParticleEmitter") then
-                local cloned = obj:Clone()
-                cloned.Color = ColorSequence.new(colorToggle and Color3.fromRGB(255,0,0) or Color3.fromRGB(0,255,0))
-                cloned.Size = NumberSequence.new(obj.Size.Keypoints[1].Value * 1.5)
-                cloned.Parent = root
-                cloned.Enabled = true
-                table.insert(allParticles, cloned)
-                colorToggle = not colorToggle
-            end
-        end
-        for _, obj in ipairs(effect2:GetDescendants()) do
-            if obj:IsA("ParticleEmitter") then
-                local cloned = obj:Clone()
-                cloned.Color = ColorSequence.new(colorToggle and Color3.fromRGB(255,0,0) or Color3.fromRGB(0,255,0))
-                cloned.Size = NumberSequence.new(obj.Size.Keypoints[1].Value * 1.1)
-                cloned.Parent = root
-                cloned.Enabled = true
-                table.insert(allParticles, cloned)
-                colorToggle = not colorToggle
-            end
-        end
-
-        task.spawn(function()
-            BodyVelocity(root, 120, 1, false, TweenInfo.new(1, Enum.EasingStyle.Quad, Enum.EasingDirection.Out))
-            task.delay(1, function()
-                for _, p in allParticles do if p and p.Parent then p.Enabled = false end end
-            end)
-            task.delay(3, function()
-                for _, p in allParticles do if p then p:Destroy() end end
-                if effect1 then effect1:Destroy() end
-                if effect2 then effect2:Destroy() end
-            end)
-        end)
-    end
-end)
+        RonaldoDash()
 
 local function load(char)
     if initialized then return end
