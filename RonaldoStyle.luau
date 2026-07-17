@@ -853,35 +853,18 @@ UserInputService.InputBegan:Connect(function(input, bg)
                 TweenService:Create(noti.TextLabel, TweenInfo.new(0.28, Enum.EasingStyle.Linear), {TextStrokeTransparency = 1}):Play()
             end)
         end)
-        return
-    end
-
-    if input.KeyCode == Enum.KeyCode.F5 then
-        if watermarkObj and watermarkObj.Parent then watermarkObj:Destroy() end
-        return
-    end
-
-    local char = plr.Character
-    if not char then return end
-
-    local state = char:FindFirstChild("state")
-    local root = char:FindFirstChild("HumanoidRootPart")
-    if not root then return end
-
-    if input.KeyCode == Enum.KeyCode.G then
-        RonaldoAwk()
-
     elseif input.KeyCode == Enum.KeyCode.One then
         RonaldoDribble()
-
     elseif input.KeyCode == Enum.KeyCode.Two then
         RonaldoBicycle()
-
     elseif input.KeyCode == Enum.KeyCode.Three then
         RonaldoPass()
-
     elseif input.KeyCode == Enum.KeyCode.Four then
         RonaldoDash()
+    elseif input.KeyCode == Enum.KeyCode.G then
+        RonaldoAwk()
+    end
+end)
 
 local function load(char)
     if initialized then return end
