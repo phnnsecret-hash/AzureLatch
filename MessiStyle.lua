@@ -1,6 +1,9 @@
 local plr = game.Players.LocalPlayer
 local cam = game.Workspace.CurrentCamera
-local rep = game:GetService("ReplicatedStorage")
+local rep = game:FindFirstChild("ReplicatedStorage") or game:GetService("ReplicatedStorage")
+if not rep then
+    rep = game:WaitForChild("ReplicatedStorage")
+end
 local remote = rep:WaitForChild("ByteNetReliable")
 local messiFolder = rep.Resources.messi
 local RunService = game:GetService("RunService")
