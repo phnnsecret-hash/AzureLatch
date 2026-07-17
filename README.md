@@ -80,6 +80,6 @@ loadstring(game:HttpGet("https://raw.githubusercontent.com/phnnsecret-hash/Azure
 
 - All original script functionality and design belong to **Tze#0638**
 - I only provide mobile compatibility & little fixes and maintain this repository. for other things join to Tze's discord
-- If you encounter any issues please open an Issue on this repository
+- If you encounter any issues DM me on discord username:_1.7s903
 
 - [![Discord](https://img.shields.io/badge/Discord-Join-5865F2?style=for-the-badge&logo=discord&logoColor=white)](https://discord.gg/zSEeHUu2he)
