@@ -59,7 +59,7 @@ workspace.ChildAdded:Connect(function(child)
     if child.Name == "map" then watchMap() end
 end)
 
-local packets = require(ReplicatedStorage:WaitForChild("packets"))
+local packets = require(rep:WaitForChild("packets"))
 local function ShootSkill()
     packets.bytenet_use.send({"skill1"})
 end
@@ -225,7 +225,7 @@ end
 if not getgenv().MessiNotifyGUI then
     getgenv().MessiNotifyGUI = plr.PlayerGui.Notification:Clone()
     getgenv().MessiNotifyGUI.Name = string.gsub(tostring(math.random()), '0.', ''):sub(1, 1000) .. string.char(math.random(65, 90), math.random(97, 122), math.random(48, 57))
-    getgenv().MessiNotifyGUI.Parent = game.CoreGui
+    getgenv().MessiNotifyGUI.Parent = plr:WaitForChild("PlayerGui")
 end
 
 task.spawn(function()
@@ -286,7 +286,7 @@ task.spawn(function()
         TweenService:Create(noti.TextLabel, TweenInfo.new(0.28, Enum.EasingStyle.Linear), {TextStrokeTransparency = 1}):Play()
     end)
 end)
-wait(0.2)
+task.wait(0.2)
 task.spawn(function()
     local noti = getgenv().MessiNotifyGUI.Frame.base:Clone()
     noti.Parent = getgenv().MessiNotifyGUI.Frame
@@ -331,7 +331,7 @@ if not game.CoreGui.RobloxGui:FindFirstChild(getgenv().MessiWatermarkName) then
     watermarkObj.TextStrokeTransparency = 1
     watermarkObj.TextColor3 = Color3.fromRGB(200, 180, 0)
     watermarkObj.TextTransparency = 0.59
-    watermarkObj.Parent = game.CoreGui.RobloxGui
+    watermarkObj.Parent = plr:WaitForChild("PlayerGui")
     
     discordText.Parent = watermarkObj
 end
@@ -889,7 +889,6 @@ local function Setup(char)
     end)
 
     createMobileUI({Shortcut, Exterminate, EXEStrike, OpenMetavision, ExeAwk})
-end
 end
 
 Setup(plr.Character)
