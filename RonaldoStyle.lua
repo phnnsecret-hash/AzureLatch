@@ -20,6 +20,7 @@ local RunService = game:GetService("RunService")
 local Debris = game:GetService("Debris")
 if getgenv().DisableWatermark == nil then getgenv().DisableWatermark = false end
 if getgenv().LegitMode == nil then getgenv().LegitMode = false end
+if getgenv().SkillShoot == nil then getgenv().SkillShoot = false end
 
 local initialized = false
 local disabled = false
@@ -80,6 +81,14 @@ local skillNames = {
     [3] = "Flawless Pass",
     [4] = "Reaction Dash"
 }
+
+
+local packets = require(ReplicatedStorage:WaitForChild("packets"))
+local function ShootSkill()
+    packets.bytenet_use.send({"skill1"})
+end
+
+ShootSkill()
 
 if not getgenv().MessiNotifyGUI then
     getgenv().MessiNotifyGUI = plr.PlayerGui.Notification:Clone()
@@ -467,12 +476,22 @@ local function TeleportShot(char, shootDelay)
     local root = char.HumanoidRootPart
     task.delay(shootDelay, function()
         if not char or not char:FindFirstChild("HumanoidRootPart") or not char:FindFirstChild("Ball") then return end
+        
+        local function executeShot()
+            if getgenv().SkillShoot then
+                ShootSkill()
+            else
+                remote:FireServer(buffer.fromstring(buffers["base"]), {
+                    {"kick", 100, false, root.CFrame.LookVector * 1e19}
+                })
+            end
+        end
+
         if getgenv().LegitMode then
-            remote:FireServer(buffer.fromstring(buffers["base"]), {
-                {"kick", 100, false, root.CFrame.LookVector * 1e19}
-            })
+            executeShot()
             return
         end
+
         local originalCFrame = root.CFrame
         local lookVector = root.CFrame.LookVector
         local team = char.state.team.Value
@@ -496,9 +515,9 @@ local function TeleportShot(char, shootDelay)
         end)()))
         root.CFrame = root.CFrame * CFrame.Angles(0, math.pi, 0) * CFrame.new(0, 0, -8.823999)
         task.wait(0.2)
-        remote:FireServer(buffer.fromstring(buffers["base"]), {
-            {"kick", 100, false, root.CFrame.LookVector * 1e19}
-        })
+        
+        executeShot()
+        
         task.wait(0.001)
         root.CFrame = originalCFrame
     end)
