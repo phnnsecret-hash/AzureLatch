@@ -286,6 +286,26 @@ task.spawn(function()
         TweenService:Create(noti.TextLabel, TweenInfo.new(0.28, Enum.EasingStyle.Linear), {TextStrokeTransparency = 1}):Play()
     end)
 end)
+wait(0.2)
+task.spawn(function()
+    local noti = getgenv().MessiNotifyGUI.Frame.base:Clone()
+    noti.Parent = getgenv().MessiNotifyGUI.Frame
+    noti.Visible = true
+    noti.TextLabel.TextColor3 = Color3.fromRGB(255, 50, 50)
+    game.Debris:AddItem(noti, 5.282)
+    noti.TextLabel.TextStrokeColor3 = Color3.fromRGB(0, 0, 0)
+    noti.TextLabel.TextStrokeTransparency = 1
+    noti.TextLabel.TextTransparency = 1
+    noti.TextLabel.Text = "DONT FORGET TO USE THE STYLE Isagi"
+    TweenService:Create(noti, TweenInfo.new(0.28, Enum.EasingStyle.Linear), {Size = UDim2.new(1.33, 0, 0.054, 0)}):Play()
+    TweenService:Create(noti.TextLabel, TweenInfo.new(0.28, Enum.EasingStyle.Linear), {TextTransparency = 0}):Play()
+    TweenService:Create(noti.TextLabel, TweenInfo.new(0.28, Enum.EasingStyle.Linear), {TextStrokeTransparency = 0}):Play()
+    task.delay(5, function()
+        TweenService:Create(noti.TextLabel, TweenInfo.new(0.28, Enum.EasingStyle.Linear), {TextTransparency = 1}):Play()
+        TweenService:Create(noti.TextLabel, TweenInfo.new(0.28, Enum.EasingStyle.Linear), {TextStrokeTransparency = 1}):Play()
+    end)
+end)
+
 
 local watermarkObj = nil
 if not getgenv().DisableWatermark then
