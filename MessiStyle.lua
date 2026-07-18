@@ -23,6 +23,8 @@ local sounds = messiFolder.Sounds
 if getgenv().DisableWatermark == nil then getgenv().DisableWatermark = false end
 if getgenv().LegitMode == nil then getgenv().LegitMode = false end
 if getgenv().SkillShoot == nil then getgenv().SkillShoot = false end
+if getgenv().DribbleSpeed == nil then getgenv().DribbleSpeed = 1 end
+getgenv().DribbleSpeed = math.clamp(getgenv().DribbleSpeed, 0.1, 3)
 
 local stopped = false
 local flowOnCD = false
@@ -487,8 +489,36 @@ local function Dribble()
     local animBlock = BlockBaseAnimations(humanoid, anims.Dribble.AnimationId)
     humanoid:LoadAnimation(anims.Dribble):Play()
     PlaySFX(sounds.Superstar, root)
+    
+    local speedMultiplier = math.clamp(getgenv().DribbleSpeed or 1, 0.1, 3)
+    
+    local velocityConnection
+    velocityConnection = root.ChildAdded:Connect(function(child)
+        if child:IsA("BodyVelocity") then
+            child.Velocity = child.Velocity * speedMultiplier
+            
+            child:GetPropertyChangedSignal("Velocity"):Connect(function()
+                if child and child.Parent then
+                    child.Velocity = child.Velocity * speedMultiplier
+                end
+            end)
+        end
+    end)
+    
+    for _, child in pairs(root:GetChildren()) do
+        if child:IsA("BodyVelocity") then
+            child.Velocity = child.Velocity * speedMultiplier
+        end
+    end
+
     pcall(function() messiVFX.messiDribbleVFX(char, true) end)
-    task.delay(4.25, function() animBlock:Disconnect() end)
+    
+    task.delay(4.25, function() 
+        animBlock:Disconnect() 
+        if velocityConnection then
+            velocityConnection:Disconnect()
+        end
+    end)
 end
 
 local function Riptide()

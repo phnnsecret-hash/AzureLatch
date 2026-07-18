@@ -19,17 +19,6 @@
 
 ---
 
-## Configuration
-
-Before loading a script you can configure the following options:
-
-| Variable | Default | Description |
-|----------|---------|-------------|
-| `DisableWatermark` | `false` | Enables or disables the watermark |
-| `LegitMode` | `false` | Removes the teleport for the shoot |
-
----
-
 # Available Scripts
 
 ## Messi
@@ -37,6 +26,8 @@ Before loading a script you can configure the following options:
 ```lua
 getgenv().DisableWatermark = false
 getgenv().LegitMode = false
+getgenv().ShootSkill = true
+getgenv().DribbleSpeed = 1
 
 loadstring(game:HttpGet("https://raw.githubusercontent.com/phnnsecret-hash/AzureLatch/main/MessiStyle.luau"))()
 ```
@@ -48,6 +39,8 @@ loadstring(game:HttpGet("https://raw.githubusercontent.com/phnnsecret-hash/Azure
 ```lua
 getgenv().DisableWatermark = false
 getgenv().LegitMode = false
+getgenv().ShootSkill = true
+getgenv().DribbleSpeed = 1
 
 loadstring(game:HttpGet("https://raw.githubusercontent.com/phnnsecret-hash/AzureLatch/main/RonaldoStyle.luau"))()
 ```
@@ -59,6 +52,8 @@ loadstring(game:HttpGet("https://raw.githubusercontent.com/phnnsecret-hash/Azure
 ```lua
 getgenv().DisableWatermark = false
 getgenv().LegitMode = false
+getgenv().ShootSkill = true
+getgenv().DribbleSpeed = 1
 
 loadstring(game:HttpGet("https://raw.githubusercontent.com/phnnsecret-hash/AzureLatch/main/SakuyaIzayoi.luau"))()
 ```
@@ -70,6 +65,8 @@ loadstring(game:HttpGet("https://raw.githubusercontent.com/phnnsecret-hash/Azure
 ```lua
 getgenv().DisableWatermark = false
 getgenv().LegitMode = false
+getgenv().ShootSkill = true
+getgenv().DribbleSpeed = 1
 
 loadstring(game:HttpGet("https://raw.githubusercontent.com/phnnsecret-hash/AzureLatch/main/SonicEXE.luau"))()
 ```

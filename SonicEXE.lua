@@ -12,6 +12,8 @@ local Workspace = game:GetService("Workspace")
 if getgenv().DisableWatermark == nil then getgenv().DisableWatermark = false end
 if getgenv().LegitMode == nil then getgenv().LegitMode = false end
 if getgenv().SkillShoot == nil then getgenv().SkillShoot = false end
+if getgenv().DribbleSpeed == nil then getgenv().DribbleSpeed = 1 end
+getgenv().DribbleSpeed = math.clamp(getgenv().DribbleSpeed, 0.1, 3)
 
 local stopped = false
 local exeAwkOnCD = false
@@ -532,9 +534,11 @@ local function Shortcut()
     sound:Play()
     Debris:AddItem(sound, 3)
 
-    Stun(0.3, false)
+    local distanceMultiplier = math.clamp(getgenv().DribbleSpeed or 1, 0.1, 3)
+    
+    Stun(0.3 * distanceMultiplier, false)
 
-    task.delay(1.5, function()
+    task.delay(1.5 * distanceMultiplier, function()
         pcall(function()
             track:Stop()
         end)

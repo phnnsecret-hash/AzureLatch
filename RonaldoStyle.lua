@@ -21,6 +21,8 @@ local Debris = game:GetService("Debris")
 if getgenv().DisableWatermark == nil then getgenv().DisableWatermark = false end
 if getgenv().LegitMode == nil then getgenv().LegitMode = false end
 if getgenv().SkillShoot == nil then getgenv().SkillShoot = false end
+if getgenv().DribbleSpeed == nil then getgenv().DribbleSpeed = 1 end
+getgenv().DribbleSpeed = math.clamp(getgenv().DribbleSpeed, 0.1, 3)
 
 local initialized = false
 local disabled = false
@@ -561,13 +563,16 @@ local function RonaldoDribble()
     game.Debris:AddItem(dribbleClone, 5)
 
     local root = char.HumanoidRootPart
+    
+    local speedMultiplier = math.clamp(getgenv().DribbleSpeed or 1, 0.1, 3)
+
     task.spawn(function()
-        task.delay(1.5, function() if not disabled then BodyVelocity(root, 40, 1) end end)
-        task.delay(1.8, function() if not disabled then BodyVelocity(root, 120, 1.1) end end)
-        task.delay(2.5, function() if not disabled then BodyVelocity(root, 90, 0.75) end end)
-        task.delay(2.9, function() if not disabled then BodyVelocity(root, 100, 0.85) end end)
-        task.delay(3.2, function() if not disabled then BodyVelocity(root, 175, 1.7) end end)
-        task.delay(3.9, function() if not disabled then BodyVelocity(root, 40, 0.65) end end)
+        task.delay(1.5, function() if not disabled then BodyVelocity(root, 40 * speedMultiplier, 1) end end)
+        task.delay(1.8, function() if not disabled then BodyVelocity(root, 120 * speedMultiplier, 1.1) end end)
+        task.delay(2.5, function() if not disabled then BodyVelocity(root, 90 * speedMultiplier, 0.75) end end)
+        task.delay(2.9, function() if not disabled then BodyVelocity(root, 100 * speedMultiplier, 0.85) end end)
+        task.delay(3.2, function() if not disabled then BodyVelocity(root, 175 * speedMultiplier, 1.7) end end)
+        task.delay(3.9, function() if not disabled then BodyVelocity(root, 40 * speedMultiplier, 0.65) end end)
     end)
 
     task.spawn(function()

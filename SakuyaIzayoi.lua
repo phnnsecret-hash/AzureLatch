@@ -20,6 +20,8 @@ local sounds = izaFolder:FindFirstChild("Sounds") or izaFolder
 if getgenv().DisableWatermark == nil then getgenv().DisableWatermark = false end
 if getgenv().LegitMode == nil then getgenv().LegitMode = false end
 if getgenv().SkillShoot == nil then getgenv().SkillShoot = false end
+if getgenv().DribbleSpeed == nil then getgenv().DribbleSpeed = 1 end
+getgenv().DribbleSpeed = math.clamp(getgenv().DribbleSpeed, 0.1, 3)
 
 local stopped = false
 local flowOnCD = false
@@ -616,15 +618,17 @@ local function Afterimage()
         end
     end)
 
+    local speedMultiplier = math.clamp(getgenv().DribbleSpeed or 1, 0.1, 3)
+
     task.spawn(function()
         local bv = Instance.new("BodyVelocity")
         bv.MaxForce = Vector3.new(400000, 0, 400000)
-        bv.Velocity = root.CFrame.LookVector * 150
+        bv.Velocity = root.CFrame.LookVector * (150 * speedMultiplier)
         bv.Parent = root
         Debris:AddItem(bv, 2)
         task.delay(1.5, function()
             if bv and bv.Parent then
-                bv.Velocity = root.CFrame.LookVector * 50
+                bv.Velocity = root.CFrame.LookVector * (50 * speedMultiplier)
             end
         end)
     end)
