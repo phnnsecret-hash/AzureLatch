@@ -491,23 +491,48 @@ local function Dribble()
     PlaySFX(sounds.Superstar, root)
     
     local speedMultiplier = math.clamp(getgenv().DribbleSpeed or 1, 0.1, 3)
+    local isChanging = false
     
+    if root then
+        root.AssemblyLinearVelocity = root.AssemblyLinearVelocity * speedMultiplier
+    end
+
     local velocityConnection
     velocityConnection = root.ChildAdded:Connect(function(child)
-        if child:IsA("BodyVelocity") then
-            child.Velocity = child.Velocity * speedMultiplier
-            
-            child:GetPropertyChangedSignal("Velocity"):Connect(function()
-                if child and child.Parent then
+        if child:IsA("BodyVelocity") or child:IsA("LinearVelocity") then
+            if not isChanging then
+                isChanging = true
+                if child:IsA("BodyVelocity") then
                     child.Velocity = child.Velocity * speedMultiplier
+                elseif child:IsA("LinearVelocity") then
+                    child.VectorVelocity = child.VectorVelocity * speedMultiplier
+                end
+                isChanging = false
+            end
+            
+            child:GetPropertyChangedSignal(child:IsA("BodyVelocity") and "Velocity" or "VectorVelocity"):Connect(function()
+                if child and child.Parent and not isChanging then
+                    isChanging = true
+                    if child:IsA("BodyVelocity") then
+                        child.Velocity = child.Velocity * speedMultiplier
+                    elseif child:IsA("LinearVelocity") then
+                        child.VectorVelocity = child.VectorVelocity * speedMultiplier
+                    end
+                    isChanging = false
                 end
             end)
         end
     end)
     
     for _, child in pairs(root:GetChildren()) do
-        if child:IsA("BodyVelocity") then
-            child.Velocity = child.Velocity * speedMultiplier
+        if (child:IsA("BodyVelocity") or child:IsA("LinearVelocity")) and not isChanging then
+            isChanging = true
+            if child:IsA("BodyVelocity") then
+                child.Velocity = child.Velocity * speedMultiplier
+            elseif child:IsA("LinearVelocity") then
+                child.VectorVelocity = child.VectorVelocity * speedMultiplier
+            end
+            isChanging = false
         end
     end
 
@@ -520,7 +545,6 @@ local function Dribble()
         end
     end)
 end
-
 local function Riptide()
     local char = plr.Character
     if not char or Stunned() or not HasBall() or IsOnCD("skill2") then return end
