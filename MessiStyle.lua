@@ -489,6 +489,8 @@ local function Dribble()
     local animBlock = BlockBaseAnimations(humanoid, anims.Dribble.AnimationId)
     humanoid:LoadAnimation(anims.Dribble):Play()
     PlaySFX(sounds.Superstar, root)
+    pcall(function() messiVFX.messiDribbleVFX(char, true) end)
+    
     
     local speedMultiplier = math.clamp(getgenv().DribbleSpeed or 1, 0.1, 3)
     local isChanging = false
@@ -536,8 +538,6 @@ local function Dribble()
         end
     end
 
-    pcall(function() messiVFX.messiDribbleVFX(char, true) end)
-    
     task.delay(4.25, function() 
         animBlock:Disconnect() 
         if velocityConnection then
