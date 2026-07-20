@@ -1,5 +1,5 @@
 
-<h1 align="center">REPO OF DOOM/h1>
+<h1 align="center">REPO OF DOOM</h1>
 
 ![Language](https://img.shields.io/badge/Language-Luau-blue?style=for-the-badge)
 ![Status](https://img.shields.io/badge/Status-Maintained-success?style=for-the-badge)
