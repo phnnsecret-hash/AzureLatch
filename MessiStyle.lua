@@ -550,13 +550,11 @@ local function Riptide()
     CancelMove()
     local humanoid = char.Humanoid
     local root = char.HumanoidRootPart
-    local animBlock = BlockBaseAnimations(humanoid, anims.Riptide.AnimationId)
     PlaySFX(sounds.Riptide, root)
     pcall(function() messiVFX.messiShootVFX(char) end)
     humanoid:LoadAnimation(anims.Riptide):Play()
     TeleportShot(char, 1.1)
-    DoCD("skill2", 8)
-    task.delay(1.1, function() animBlock:Disconnect() end)
+    DoCD("skill2", 25)
 end
 
 local function SuperPass()
