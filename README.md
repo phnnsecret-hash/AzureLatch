@@ -12,7 +12,8 @@
 
 > [!IMPORTANT]
 > **All original scripts were created by Tze#0638**
-> **DON'T COPY PASTE ANYTHING FOMR THIS REPO**
+>
+> **DON'T COPY PASTE ANYTHING FROM THIS REPO**
 >
 > This repository only provides mobile support, compatibility updates, maintenance, and minor fixes
 >
