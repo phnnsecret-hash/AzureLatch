@@ -749,7 +749,7 @@ local function NutmegSteal()
     end)
     task.wait(0.08)
     remote:FireServer(buffer.fromstring(buffers["base"]), {{"tackle"}})
-    task.wait(0.3)
+    task.wait(0.4)
     animBlock:Disconnect()
     if HasBall() then
         for _, track in pairs(humanoid:GetPlayingAnimationTracks()) do track:Stop(0) end
