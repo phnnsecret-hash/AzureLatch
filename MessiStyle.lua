@@ -223,7 +223,7 @@ end
 
 local packets = require(rep:WaitForChild("packets"))
 local function ShootSkill()
-    packets.bytenet_use.send({"skill1"})
+    packets.bytenet_use.send({"skill2"})
 end
 
 ShootSkill()
@@ -303,7 +303,7 @@ task.spawn(function()
     noti.TextLabel.TextStrokeColor3 = Color3.fromRGB(0, 0, 0)
     noti.TextLabel.TextStrokeTransparency = 1
     noti.TextLabel.TextTransparency = 1
-    noti.TextLabel.Text = "DONT FORGET TO USE THE STYLE Isagi"
+    noti.TextLabel.Text = "DONT FORGET TO USE THE STYLE Shidou if u have shootskill turned on."
     TweenService:Create(noti, TweenInfo.new(0.28, Enum.EasingStyle.Linear), {Size = UDim2.new(1.33, 0, 0.054, 0)}):Play()
     TweenService:Create(noti.TextLabel, TweenInfo.new(0.28, Enum.EasingStyle.Linear), {TextTransparency = 0}):Play()
     TweenService:Create(noti.TextLabel, TweenInfo.new(0.28, Enum.EasingStyle.Linear), {TextStrokeTransparency = 0}):Play()
@@ -320,7 +320,6 @@ if getgenv().MessiWatermarkName == nil or getgenv().MessiWatermarkName == '' the
     getgenv().MessiWatermarkName = string.gsub(tostring(math.random()), '0.', ''):sub(1, 1000) .. string.char(math.random(65, 90), math.random(97, 122), math.random(48, 57))
 end
 if not game.CoreGui.RobloxGui:FindFirstChild(getgenv().MessiWatermarkName) then
-    setclipboard('https://discord.gg/Zu4PnN9Wxw')
 
     local discordText = getgenv().MessiNotifyGUI.Frame.base.TextLabel:Clone()
     discordText.Text = ' discord.gg/Zu4PnN9Wxw '
