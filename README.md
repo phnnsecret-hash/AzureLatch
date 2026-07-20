@@ -13,7 +13,7 @@
 > [!IMPORTANT]
 > **All original scripts were created by Tze#0638**
 >
-> **DON'T COPY PASTE ANYTHING FROM THIS REPO**
+> **DON'T COPY PASTE ANYTHING FROM THIS REPO(unless i give access)**
 >
 > This repository only provides mobile support, compatibility updates, maintenance, and minor fixes
 >
